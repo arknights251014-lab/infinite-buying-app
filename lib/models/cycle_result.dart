@@ -15,10 +15,14 @@ class CycleResult {
   final double totalProfit;
   final double profitRate;
 
+  final int investmentDays;
+
   final double maxT;
   final int maxQty;
   final double maxExposure;
 
+  /// normalExit
+  /// forcedExit
   final String completionReason;
 
   CycleResult({
@@ -38,6 +42,8 @@ class CycleResult {
     required this.totalProfit,
     required this.profitRate,
 
+    required this.investmentDays,
+
     required this.maxT,
     required this.maxQty,
     required this.maxExposure,
@@ -45,81 +51,93 @@ class CycleResult {
     required this.completionReason,
   });
 
-  int get investmentDays =>
-      endDate.difference(startDate).inDays;
+  Map<String, dynamic> toJson() {
+    return {
+      'cycleNumber': cycleNumber,
 
-  Map<String, dynamic> toJson() => {
-        'cycleNumber': cycleNumber,
+      'symbol': symbol,
 
-        'symbol': symbol,
+      'splitCount': splitCount,
+      'targetProfit': targetProfit,
 
-        'splitCount': splitCount,
-        'targetProfit': targetProfit,
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
 
-        'startDate': startDate.toIso8601String(),
-        'endDate': endDate.toIso8601String(),
+      'startCapital': startCapital,
+      'endCash': endCash,
 
-        'startCapital': startCapital,
-        'endCash': endCash,
+      'totalProfit': totalProfit,
+      'profitRate': profitRate,
 
-        'totalProfit': totalProfit,
-        'profitRate': profitRate,
+      'investmentDays': investmentDays,
 
-        'maxT': maxT,
-        'maxQty': maxQty,
-        'maxExposure': maxExposure,
+      'maxT': maxT,
+      'maxQty': maxQty,
+      'maxExposure': maxExposure,
 
-        'completionReason': completionReason,
-      };
+      'completionReason': completionReason,
+    };
+  }
 
   factory CycleResult.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      CycleResult(
-        cycleNumber: json['cycleNumber'],
+  ) {
+    return CycleResult(
+      cycleNumber:
+          json['cycleNumber'] ?? 0,
 
-        symbol: json['symbol'] ?? 'SOXL',
+      symbol:
+          json['symbol'] ?? 'SOXL',
 
-        splitCount: json['splitCount'] ?? 20,
+      splitCount:
+          json['splitCount'] ?? 20,
 
-        targetProfit:
-            (json['targetProfit'] ?? 20)
-                .toDouble(),
+      targetProfit:
+          (json['targetProfit'] ?? 20)
+              .toDouble(),
 
-        startDate:
-            DateTime.parse(json['startDate']),
+      startDate:
+          DateTime.parse(
+              json['startDate']),
 
-        endDate:
-            DateTime.parse(json['endDate']),
+      endDate:
+          DateTime.parse(
+              json['endDate']),
 
-        startCapital:
-            (json['startCapital'] as num)
-                .toDouble(),
+      startCapital:
+          (json['startCapital'] ?? 0)
+              .toDouble(),
 
-        endCash:
-            (json['endCash'] as num)
-                .toDouble(),
+      endCash:
+          (json['endCash'] ?? 0)
+              .toDouble(),
 
-        totalProfit:
-            (json['totalProfit'] as num)
-                .toDouble(),
+      totalProfit:
+          (json['totalProfit'] ?? 0)
+              .toDouble(),
 
-        profitRate:
-            (json['profitRate'] as num)
-                .toDouble(),
+      profitRate:
+          (json['profitRate'] ?? 0)
+              .toDouble(),
 
-        maxT:
-            (json['maxT'] as num)
-                .toDouble(),
+      investmentDays:
+          json['investmentDays'] ??
+              0,
 
-        maxQty: json['maxQty'],
+      maxT:
+          (json['maxT'] ?? 0)
+              .toDouble(),
 
-        maxExposure:
-            (json['maxExposure'] as num)
-                .toDouble(),
+      maxQty:
+          json['maxQty'] ?? 0,
 
-        completionReason:
-            json['completionReason'] ??
-                'normalExit',
-      );
+      maxExposure:
+          (json['maxExposure'] ?? 0)
+              .toDouble(),
+
+      completionReason:
+          json['completionReason'] ??
+              'normalExit',
+    );
+  }
 }
